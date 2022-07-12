@@ -652,6 +652,18 @@
           }
           binding.renderValue(el, data.x, initResult);
           evalAndRun(data.jsHooks.render, initResult, [el, data.x]);
+        } else {
+          $.ajax({
+            url: "widgets/" + el.id + ".json",
+            success: function(data) {
+              if (!(data.evals instanceof Array)) data.evals = [data.evals];
+              for (var k = 0; data.evals && k < data.evals.length; k++) {
+                window.HTMLWidgets.evaluateStringMember(data.x, data.evals[k]);
+              }
+              binding.renderValue(el, data.x, initResult);
+              evalAndRun(data.jsHooks.render, initResult, [el, data.x]);
+            }
+          });
         }
       });
     });
